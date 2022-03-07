@@ -15,9 +15,12 @@ export class UsersController {
     async addUser(
         @Body('email') userEmail: string,
         @Body('password') userPassword: string,
+        @Body('name') userName: string,
+        @Body('gender') userGender: string,
     ) {
+        console.log(`At controller, ${userName}, ${userGender}, `);
         const hashedPassword = await bcrypt.hash(userPassword, 12);
-        const generatedId = await this.usersService.insertUser(userEmail, hashedPassword);
+        const generatedId = await this.usersService.insertUser(userEmail, hashedPassword, userName, userGender);
         return { id: generatedId };
     }
 
@@ -27,7 +30,7 @@ export class UsersController {
         console.log(req.body)
         return this.authService.login(req.body);
     }
-    
+
     @UseGuards(JwtAuthGuard)
     @Get()
     async getAllUsers() {
@@ -36,8 +39,8 @@ export class UsersController {
 
     @UseGuards(JwtAuthGuard)
     @Get('profile')
-    getProfile(@Request() req) {
-        return `hello: ${req.user.email}`;
+    async getProfile(@Request() req) {
+        return await this.usersService.getProfile(req.user.email, req.user.password);
     }
 
     @UseGuards(JwtAuthGuard)
@@ -45,9 +48,13 @@ export class UsersController {
     async updateUser(
         @Body('email') userEmail: string,
         @Body('password') userPassword: string,
+        @Body('name') userName: string,
+        @Body('gender') userGender: string,
+        @Request() req
     ) {
-        await this.usersService.updateUser(userEmail, userPassword);
-        return null;
+        const updatedUser = await this.usersService.updateUser(req.user, userEmail, userPassword, userName, userGender,);
+        console.log(JSON.stringify(updatedUser));
+        return 'updated';
     }
 
     @UseGuards(JwtAuthGuard)

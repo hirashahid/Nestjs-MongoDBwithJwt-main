@@ -11,7 +11,6 @@ export class AuthService {
     ) { }
 
     async validateUser(email: string, password: string): Promise<any> {
-        console.log('at auth');
         const user = await this.usersService.findUser(email, password);
         if (!user) {
             throw new NotFoundException('Could not find user at Auth');
