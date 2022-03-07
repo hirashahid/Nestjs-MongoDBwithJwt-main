@@ -7,7 +7,7 @@ import * as bcrypt from 'bcrypt';
 export class ProductsController {
     constructor(private readonly productsService: ProductServices) { }
 
-    @Post()
+    @Post('/insert')
     async addProduct(
         @Body('title') prodTitle: string,
         @Body('description') prodDesc: string,
@@ -29,14 +29,14 @@ export class ProductsController {
         return await this.productsService.getProducts();
     }
 
-    @Get(':id')
-    getProduct(@Param('id') prodId: string) {
+    @Get('getsingleproduct')
+    getProduct(@Body('id') prodId: string) {
         return this.productsService.getSingleProduct(prodId);
     }
 
-    @Patch(':id')
+    @Patch('/update')
     async updateProduct(
-        @Param('id') prodId: string,
+        @Body('id') prodId: string,
         @Body('title') prodTitle: string,
         @Body('description') prodDesc: string,
         @Body('price') prodPrice: number,
@@ -45,8 +45,8 @@ export class ProductsController {
         return null;
     }
 
-    @Delete(':id')
-    async deleteProduct(@Param('id') prodId: string,) {
+    @Delete('/delete')
+    async deleteProduct(@Body('id') prodId: string,) {
         await this.productsService.deleteProduct(prodId);
         return null;
     }
