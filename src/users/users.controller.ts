@@ -25,7 +25,6 @@ export class UsersController {
     @UseGuards(LocalAuthGuard)
     @Post('auth/login')
     async login(@Request() req) {
-        console.log(req.body)
         return this.authService.login(req.body);
     }
 
@@ -50,16 +49,13 @@ export class UsersController {
         @Body('gender') userGender: string,
         @Request() req
     ) {
-        const updatedUser = await this.usersService.updateUser(req.user, userEmail, userPassword, userName, userGender,);
-        console.log(JSON.stringify(updatedUser));
-        return 'updated';
+        return await this.usersService.updateUser(req.user, userEmail, userPassword, userName, userGender,);
     }
 
     @UseGuards(JwtAuthGuard)
     @Delete()
     async deleteProduct(@Body('email') userEmail: string,) {
         await this.usersService.deleteUser(userEmail);
-        return null;
+        return 'Deleted';
     }
-
 }

@@ -12,11 +12,9 @@ export class UsersServices {
     ) { }
 
     async insertUser(email: string, password: string, name: string, gender: string) {
-        let res;
         const user = await this.userModel.findOne({ email });
         if (user) {
-            res = 'User already exist'
-            return res;
+            return 'User already exist';
         }
         else {
             const newUser = new this.userModel({
@@ -25,9 +23,8 @@ export class UsersServices {
                 name,
                 gender,
             });
-            const newUserAdded = await newUser.save();
-            res = 'User has been registered';
-            return res;
+            await newUser.save();
+            return 'User has been registered';
         }
     }
 
