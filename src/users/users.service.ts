@@ -12,15 +12,23 @@ export class UsersServices {
     ) { }
 
     async insertUser(email: string, password: string, name: string, gender: string) {
-        console.log(name);
-        const newUser = new this.userModel({
-            email,
-            password,
-            name,
-            gender,
-        });
-        const user = await newUser.save();
-        return user.id as string;
+        let res;
+        const user = await this.userModel.findOne({ email });
+        if (user) {
+            res = 'User already exist'
+            return res;
+        }
+        else {
+            const newUser = new this.userModel({
+                email,
+                password,
+                name,
+                gender,
+            });
+            const newUserAdded = await newUser.save();
+            res = 'User has been registered';
+            return res;
+        }
     }
 
     async getProfile(email: string, password: string): Promise<any> {

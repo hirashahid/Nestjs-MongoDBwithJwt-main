@@ -18,10 +18,8 @@ export class UsersController {
         @Body('name') userName: string,
         @Body('gender') userGender: string,
     ) {
-        console.log(`At controller, ${userName}, ${userGender}, `);
         const hashedPassword = await bcrypt.hash(userPassword, 12);
-        const generatedId = await this.usersService.insertUser(userEmail, hashedPassword, userName, userGender);
-        return { id: generatedId };
+        return await this.usersService.insertUser(userEmail, hashedPassword, userName, userGender);
     }
 
     @UseGuards(LocalAuthGuard)
