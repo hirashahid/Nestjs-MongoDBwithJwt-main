@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, Patch, Delete } from "@nestjs/common";
+import { Controller, Post, Body, Get, Response, Request, Patch, Delete } from "@nestjs/common";
 import { ProductServices } from "./products.service";
 
 import * as bcrypt from 'bcrypt';
@@ -13,10 +13,9 @@ export class ProductsController {
         @Body('description') prodDesc: string,
         @Body('price') prodPrice: number,
     ) {
-        // insertProduct also returning a promise
-        const hashedTitle = await bcrypt.hash(prodTitle, 12);
+        console.log('at insert');
         const generatedId = await this.productsService.insertProduct(
-            hashedTitle,
+            prodTitle,
             prodDesc,
             prodPrice,
         );
@@ -30,8 +29,9 @@ export class ProductsController {
     }
 
     @Get('getsingleproduct')
-    getProduct(@Body('id') prodId: string) {
-        return this.productsService.getSingleProduct(prodId);
+    getProduct(@Request() req) {
+        console.log(req.body);
+        return req.body['product'];
     }
 
     @Patch('/update')
